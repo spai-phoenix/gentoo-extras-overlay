@@ -45,7 +45,7 @@ src_compile() {
 	fi
 	if use promtail; then
 		einfo "Building cmd/loki/promtail..."
-		CGO_ENABLED=0 go build -ldflags "${EGO_LDFLAGS}" -tags netgo -mod vendor -o cmd/promtail/promtail ./cmd/promtail || die
+		CGO_ENABLED=0 go build -ldflags "${EGO_LDFLAGS}" -tags netgo -mod vendor -o ./clients/cmd/promtail/promtail ./clients/cmd/promtail || die
 	fi
 	if use fluent-bit; then
 		einfo "Building cmd/fluent-bit/out_loki..."
@@ -70,11 +70,11 @@ src_install() {
 		dobin "${S}/cmd/loki/loki-canary"
 	fi
 	if use promtail; then
-		dobin "${S}/cmd/promtail/promtail"
+		dobin "${S}/clients/cmd/promtail/promtail"
 		newconfd "${FILESDIR}/promtail.confd" "promtail"
 		newinitd "${FILESDIR}/promtail.initd" "promtail"
 		insinto "/etc/${PN}"
-		doins "${S}/cmd/promtail/promtail-local-config.yaml"
+		doins "${S}/clients/cmd/promtail/promtail-local-config.yaml"
 		keepdir "/etc/${PN}"
 		keepdir "/var/lib/${PN}"
 		fowners loki:grafana "/etc/${PN}"
